@@ -226,25 +226,57 @@ function getOffsetA() {
 }
 const OFFSET_A = getOffsetA();
 
+// 4X2X4: ciclo de 10 dias
+// Padrão M (A,B,C,D,E): M1,M2,M3,M4,N1,N2,F1,F2,F3,F4
+// Padrão T (F,G,H,I,T): T1,T2,T3,T4,N1,N2,F1,F2,F3,F4
+// Padrão CG (C-G):      M1,M2,T1,T2,N1,N2,F1,F2,F3,F4
+
+const CYCLE10_M  = ['M1','M2','M3','M4','N1','N2','F1','F2','F3','F4'];
+const CYCLE10_T  = ['T1','T2','T3','T4','N1','N2','F1','F2','F3','F4'];
+const CYCLE10_CG = ['M1','M2','T1','T2','N1','N2','F1','F2','F3','F4'];
+
+// Posição no ciclo de 10 dias em 30/04/2026
+const POS_TODAY_10 = {
+  'A':0,'B':6,'C':8,'D':4,'E':2,
+  'F':2,'G':8,'H':0,'I':6,'T':4,
+  'C-G':8
+};
+
+const GROUP_M  = new Set(['A','B','C','D','E']);
+const GROUP_T  = new Set(['F','G','H','I','T']);
+const GROUP_CG = new Set(['C-G']);
+
+// 4X2-6X4: ciclo de 16 dias
 const CYCLE16 = ['M1','M2','M3','M4','F1','F2','M1','M2','M3','M4','M5','M6','F1','F2','F3','F4'];
-const POS_TODAY = {
+const POS_TODAY_16 = {
   'AM':14,'AT':14,'BM':12,'BT':12,'CM':10,'CT':10,
   'DM':8,'DT':8,'EM':6,'ET':6,'FM':4,'FT':4,
   'GM':2,'GT':2,'HM':0,'HT':0
 };
 const TODAY_REF = new Date(2026, 3, 30);
-const GROUP_B = new Set(Object.keys(POS_TODAY));
+const GROUP_B = new Set(Object.keys(POS_TODAY_16));
 
 function getTurno(date, col, letra) {
+  const diff = Math.round((date - TODAY_REF) / 86400000);
+
+  // 4X2-6X4
   if (GROUP_B.has(letra)) {
     const isT = letra.endsWith('T');
-    const diff = Math.round((date - TODAY_REF) / 86400000);
-    const pos = ((POS_TODAY[letra] + diff) % 16 + 16) % 16;
+    const pos = ((POS_TODAY_16[letra] + diff) % 16 + 16) % 16;
     let v = CYCLE16[pos];
     return isT ? v.replace('M','T') : v;
   }
-  const diff = Math.round((date - baseDate) / 86400000);
-  const idx = (((diff % cycleLen) + cycleLen) % cycleLen + OFFSET_A) % cycleLen;
+
+  // 4X2X4
+  if (GROUP_M.has(letra) || GROUP_T.has(letra) || GROUP_CG.has(letra)) {
+    const cycle = GROUP_M.has(letra) ? CYCLE10_M : GROUP_T.has(letra) ? CYCLE10_T : CYCLE10_CG;
+    const pos = ((POS_TODAY_10[letra] + diff) % 10 + 10) % 10;
+    return cycle[pos];
+  }
+
+  // 4X1X3: usa rawData
+  const diffBase = Math.round((date - baseDate) / 86400000);
+  const idx = (((diffBase % cycleLen) + cycleLen) % cycleLen + OFFSET_A) % cycleLen;
   const row = rawData[idx];
   return row ? row[col + 1] : '?';
 }
