@@ -33,11 +33,11 @@
   .leg { display: flex; align-items: center; gap: 4px; font-size: 0.7rem; color: #94a3b8; }
   .leg-dot { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
   .empty-msg { grid-column: 1 / -1; text-align: center; color: #475569; font-size: 0.85rem; padding: 24px 0; }
-
+  footer { text-align: center; color: #334155; font-size: 0.65rem; letter-spacing: 0.5px; padding: 16px 0 8px; }
   @media (min-width: 520px) {
     body { padding: 32px 24px; display: flex; flex-direction: column; align-items: center; }
     h1 { font-size: 1.5rem; margin-bottom: 20px; }
-    .card { max-width: 700px; width: 100%; padding: 24px; margin-bottom: 16px; border-radius: 18px; }
+    .card { max-width: 560px; width: 100%; padding: 24px; margin-bottom: 16px; border-radius: 18px; }
     .selects { gap: 16px; }
     select { font-size: 1rem; padding: 11px 14px; border-radius: 10px; }
     label { font-size: 0.75rem; margin-bottom: 6px; }
@@ -45,10 +45,10 @@
     .nav-btn { width: 46px; height: 46px; font-size: 1.3rem; border-radius: 10px; }
     .nav-label { font-size: 1.15rem; }
     .cal-grid { gap: 5px; }
-    .dow { font-size: 0.78rem; padding: 4px 0 8px; }
-    .day { padding: 8px 4px 10px; border-radius: 10px; }
-    .day-n { font-size: 0.82rem; margin-bottom: 6px; }
-    .chip { font-size: 0.88rem; padding: 6px 0; border-radius: 6px; }
+    .dow { font-size: 0.95rem; padding: 6px 0 10px; color: #94a3b8; }
+    .day { padding: 22px 4px 24px; border-radius: 10px; }
+    .day-n { font-size: 1.1rem; margin-bottom: 10px; color: #cbd5e1; }
+    .chip { font-size: 1.1rem; padding: 10px 0; border-radius: 6px; }
     .legend { margin-top: 18px; gap: 8px 20px; }
     .leg { font-size: 0.82rem; }
     .leg-dot { width: 11px; height: 11px; }
@@ -98,8 +98,9 @@
     <div class="leg"><div class="leg-dot" style="background:#818cf866"></div>Noite</div>
     <div class="leg"><div class="leg-dot" style="background:#4ade8066"></div>Folga</div>
   </div>
-
 </div>
+
+<footer>Developed by B.T.B.</footer>
 
 <script>
 const rawData = [
@@ -274,6 +275,7 @@ function renderCal() {
   const letra = document.getElementById('selLetra').value;
   document.getElementById('mesAno').textContent = `${MESES[curMonth]} ${curYear}`;
   const cal = document.getElementById('cal');
+
   if (!letra) {
     cal.innerHTML = '<div class="empty-msg">Selecione a escala e a letra</div>';
     return;
