@@ -173,6 +173,7 @@ const POS_4X2X4_6 = {
   'AM':2,'BM':0,'CM':14,'DM':12,'EM':10,'FM':8,'GM':6,'HM':4,
   'AT':2,'BT':0,'CT':14,'DT':12,'ET':10,'FT':8,'GT':6,'HT':4
 };
+};
 
 // =============================================================
 // SEMANAL — baseado no dia da semana
@@ -186,7 +187,13 @@ const CYCLE_SEMANAL_T = { 0:'F2', 1:'T1', 2:'T2', 3:'T3', 4:'T4', 5:'T5', 6:'F1'
 // FUNÇÃO PRINCIPAL: calcula turno de uma data para uma letra
 // =============================================================
 function getTurno(date, letra) {
-  const diff = Math.round((date - TODAY_REF) / 86400000);
+  function daysBetween(a, b) {
+  const utcA = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utcB = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+  return Math.floor((utcA - utcB) / 86400000);
+}
+
+  const diff = daysBetween(date, TODAY_REF);
 
   // --- Semanal ---
   if (document.getElementById('selEscala').value === 'Semanal') {
